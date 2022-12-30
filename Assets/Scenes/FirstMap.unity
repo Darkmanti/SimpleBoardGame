@@ -5002,8 +5002,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 30
   shift: 3.5
-  plusLimit: {x: 30, y: 50, z: 15}
-  minusLimit: {x: 30, y: 50, z: 30}
+  plusLimit: {x: 40, y: 50, z: 40}
+  minusLimit: {x: 40, y: 50, z: 40}
   cam: {fileID: 963194227}
   rotationTarget: {fileID: 1504436540}
   distanceToTarget: 10
@@ -6566,7 +6566,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4264423841656326535, guid: 9d19e91ed8774d24d83094875ebd6f83, type: 3}
       propertyPath: bonusType
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4264423841656326535, guid: 9d19e91ed8774d24d83094875ebd6f83, type: 3}
       propertyPath: pointType
@@ -6574,7 +6574,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4264423841656326535, guid: 9d19e91ed8774d24d83094875ebd6f83, type: 3}
       propertyPath: bonusValue
-      value: 3
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7200347575237555472, guid: 9d19e91ed8774d24d83094875ebd6f83, type: 3}
       propertyPath: m_fontColor.b
@@ -6971,7 +6971,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4264423841656326535, guid: 9d19e91ed8774d24d83094875ebd6f83, type: 3}
       propertyPath: bonusValue
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 7200347575237555472, guid: 9d19e91ed8774d24d83094875ebd6f83, type: 3}
       propertyPath: m_fontColor.b
