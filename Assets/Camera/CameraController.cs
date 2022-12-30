@@ -1,18 +1,26 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
+using Unity.VisualScripting;
 using UnityEngine;
 using static UnityEngine.GraphicsBuffer;
 
 public class CameraController : MonoBehaviour
 {
     [SerializeField] float speed = 1.0f;
+    [SerializeField] float rotationSpeed = 1.0f;
     [SerializeField] float shift = 1.0f;
+
+    float lookUpMax = 70.0f;
+    float lookUpMin = 15.0f;
 
     [SerializeField] Vector3 plusLimit = new Vector3(100.0f, 100.0f, 100.0f);
     [SerializeField] Vector3 minusLimit = new Vector3(100.0f, 100.0f, 100.0f);
 
+    [SerializeField] Contoller controller;
     [SerializeField] Camera cam;
-    [SerializeField] Transform rotationTarget;
+
+    [SerializeField] Transform pivot;
     [SerializeField] float distanceToTarget = 10;
     Vector3 previousPosition;
 
@@ -24,51 +32,32 @@ public class CameraController : MonoBehaviour
     private void Start()
     {
         fov = cam.fieldOfView;
+        defaultFov = fov;
 
-        RenderSettings.skybox.SetFloat("Rotation", 180.0f);
+        //LookAtCamera();
     }
 
     void Update()
     {
-        // WASD - camera moovement
-        Vector3 inputDir = new Vector3(0.0f, 0.0f, 0.0f);
-        inputDir = GetInput(inputDir);
-
-        Transform pos = transform;
-
-        // disable y-axis
-        Vector3 forward = transform.forward;
-        forward.y = 0;
-        Vector3 right = transform.right;
-        right.y = 0;
-        Vector3 moveDir = (forward * inputDir.z) + (right * inputDir.x);
-
-        if (Input.GetKey(KeyCode.LeftShift))
+        if(controller.isPlayersNamed)
         {
-            moveDir *= shift * speed * Time.deltaTime;
+            // WASD - camera moovement
+            WASDCameraMoovement();
+
+            // FOV (zoom)
+            FOVCamera();
+
+            // Camera rotation
+            RotateCamera();
+
+            //Default fov
+            if (Input.GetKeyDown(KeyCode.R))
+            {
+                cam.fieldOfView = fov;
+                fov = defaultFov;
+            }
         }
-        else
-        {
-            moveDir *= speed * Time.deltaTime;
-        }
-
-        transform.position = CheckLimits(pos, moveDir);
-        //transform.position += moveDir;
-
-        // FOV (zoom)
-        float wheelMove = Input.GetAxis("Mouse ScrollWheel");
-        fov -= wheelMove * fovSpeed * Time.deltaTime;
-        cam.fieldOfView = fov;
-
-        // Camera rotation
-        RotateCamera();
-
-        //Default
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            cam.fieldOfView = fov;
-            fov = defaultFov;
-        }
+       
     }
 
 
@@ -136,7 +125,7 @@ public class CameraController : MonoBehaviour
         }
         else if (Input.GetMouseButton(1))
         {
-            distanceToTarget = Vector3.Distance(rotationTarget.position, cam.transform.position);
+            distanceToTarget = Vector3.Distance(pivot.position, cam.transform.position);
 
             Vector3 newPosition = cam.ScreenToViewportPoint(Input.mousePosition);
             Vector3 direction = previousPosition - newPosition;
@@ -144,15 +133,62 @@ public class CameraController : MonoBehaviour
             float rotationAroundYAxis = -direction.x * 180; // camera moves horizontally
             float rotationAroundXAxis = direction.y * 180; // camera moves vertically
 
-            cam.transform.position = rotationTarget.position;
+            cam.transform.position = pivot.position;
 
             cam.transform.Rotate(new Vector3(1, 0, 0), rotationAroundXAxis);
-            cam.transform.Rotate(new Vector3(0, 1, 0), rotationAroundYAxis, Space.World); // <— This is what makes it work!
+            cam.transform.Rotate(new Vector3(0, 1, 0), rotationAroundYAxis, Space.World);
 
             cam.transform.Translate(new Vector3(0, 0, -distanceToTarget));
 
             previousPosition = newPosition;
         }
+    }
+
+    void LookAtCamera()
+    {
+        distanceToTarget = Vector3.Distance(pivot.position, cam.transform.position);
+        cam.transform.position = pivot.position;
+        cam.transform.Translate(new Vector3(0, 0, -distanceToTarget));
+    }
+
+    void FOVCamera()
+    {
+        float wheelMove = Input.GetAxis("Mouse ScrollWheel");
+        fov -= wheelMove * fovSpeed * Time.deltaTime;
+
+        if (fov > 90)
+            fov = 90;
+        if (fov < 30)
+            fov = 30;
+
+        cam.fieldOfView = fov;
+    }
+
+    void WASDCameraMoovement()
+    {
+        Vector3 inputDir = new Vector3(0.0f, 0.0f, 0.0f);
+        inputDir = GetInput(inputDir);
+
+        Transform pos = transform;
+
+        // disable y-axis
+        Vector3 forward = transform.forward;
+        forward.y = 0;
+        Vector3 right = transform.right;
+        right.y = 0;
+        Vector3 moveDir = (forward * inputDir.z) + (right * inputDir.x);
+
+        if (Input.GetKey(KeyCode.LeftShift))
+        {
+            moveDir *= shift * speed * Time.deltaTime;
+        }
+        else
+        {
+            moveDir *= speed * Time.deltaTime;
+        }
+
+        transform.position = CheckLimits(pos, moveDir);
+        //transform.position += moveDir;
     }
 
 }

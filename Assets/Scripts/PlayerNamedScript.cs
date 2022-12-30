@@ -8,6 +8,12 @@ public class PlayerNamedScript : MonoBehaviour
     [SerializeField] Transform itemContainer;
     [SerializeField] Transform itemTemplate;
 
+    [SerializeField] GameObject warningContainer;
+    [SerializeField] TextMeshProUGUI warningText;
+
+    int maxNameLength = 10;
+    int minNameLength = 2;
+
     int numberOfPlayers = GameState.numberOfPlayers;
 
     List<PlayerNamedEntry> textMeshList = new List<PlayerNamedEntry>();
@@ -40,20 +46,36 @@ public class PlayerNamedScript : MonoBehaviour
         }
     }
 
+    private IEnumerator ShowWarning()
+    {
+        warningContainer.SetActive(true);
+        yield return new WaitForSeconds(2.0f);
+        warningContainer.SetActive(false);
+        yield return null;
+    }
+
 
     public void VerifyName()
     {
-        // TODO: check name
 
-        if(true)
+        for(int i = 0; i < numberOfPlayers; i++)
         {
-            contoller.SpawnPlayers(textMeshList);
-            itemContainer.parent.gameObject.SetActive(false);
-            //PlayersNamedObj.SetActive(false);
+            if(textMeshList[i].GetComponent<PlayerNamedEntry>().GetName().Length > maxNameLength)
+            {
+                warningText.SetText($"{i + 1} name is to long");
+                StartCoroutine(ShowWarning());
+                return;
+            }
+
+            if(textMeshList[i].GetComponent<PlayerNamedEntry>().GetName().Length < minNameLength)
+            {
+                warningText.SetText($"enter {i + 1} name");
+                StartCoroutine(ShowWarning());
+                return;
+            }
         }
-        else
-        {
-            // notify
-        }
+
+        contoller.SpawnPlayers(textMeshList);
+        itemContainer.parent.gameObject.SetActive(false);
     }
 }

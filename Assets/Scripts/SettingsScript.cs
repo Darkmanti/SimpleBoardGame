@@ -8,12 +8,10 @@ using UnityEngine.UI;
 
 public class SettingsScript : MonoBehaviour
 {
-    Transform resolutionObject;
-    Transform fullscreenObject;
-    Transform selectPlayersObject;
+    [SerializeField] Toggle fullscreenObject;
 
-    TMP_Dropdown selectPlayersComponent;
-    TMP_Dropdown resolutionComponent;
+    [SerializeField] TMP_Dropdown selectPlayersComponent;
+    [SerializeField] TMP_Dropdown resolutionComponent;
 
     bool fullscreen;
 
@@ -32,33 +30,38 @@ public class SettingsScript : MonoBehaviour
     }
 
 
-    // Start is called before the first frame update
     void Start()
     {
-        Transform settingsMenu = transform.Find("SettingsMenu");
-        resolutionObject = settingsMenu.Find("Resolution");
-        fullscreenObject = settingsMenu.Find("Fullscreen");
-
-        Transform sceneMenu = transform.Find("SceneMenu");
-        selectPlayersObject = sceneMenu.Find("SelectPlayers");
-
-        resolutionComponent = resolutionObject.GetComponent<TMP_Dropdown>();
-        selectPlayersComponent = selectPlayersObject.GetComponent<TMP_Dropdown>();
-
         List<TMP_Dropdown.OptionData> availableResolutions = new();
+
+        Resolution currentRes = Screen.currentResolution;
+        int currentResId = 0;
+        int i = 0;
 
         resolutions = Screen.resolutions;
 
         // Print and add the resolutions
         foreach (var res in resolutions)
         {
-            //Debug.Log(res.width + "x" + res.height + " : " + res.refreshRate);
+            if((res.width == currentRes.width) && (res.height == currentRes.height) && (res.refreshRate == currentRes.refreshRate))
+            {
+                currentResId = i;
+            }
+
             TMP_Dropdown.OptionData item = new(res.width + "x" + res.height + "  " + res.refreshRate + "hz");
             availableResolutions.Add(item);
+
+            i++;
         }
 
         resolutionComponent.ClearOptions();
         resolutionComponent.AddOptions(availableResolutions);
+
+        Toggle toggle = fullscreenObject.GetComponent<Toggle>();
+        toggle.isOn = Screen.fullScreen;
+
+        resolutionComponent.SetValueWithoutNotify(currentResId);
+        resolutionComponent.RefreshShownValue();
     }
 
     public void ChangeNumberOfPlayers()

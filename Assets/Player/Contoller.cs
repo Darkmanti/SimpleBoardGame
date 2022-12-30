@@ -30,16 +30,18 @@ public class Contoller : MonoBehaviour
     [SerializeField] GameObject PlayersNamedObj;
     [SerializeField] GameObject canvasGameInfo;
 
-    [SerializeField] GameObject tintInfo;
+    [SerializeField] GameObject hintInfo;
     [SerializeField] GameObject tableStat;
 
-    [SerializeField] GameObject screenTint;
+    [SerializeField] GameObject screenHint;
 
     [SerializeField] TextMeshProUGUI diceRolledText;
-    [SerializeField] TextMeshProUGUI tintText;
+    [SerializeField] TextMeshProUGUI hintText;
     [SerializeField] TextMeshProUGUI playerTurnText;
 
-    bool isPlayersNamed = false;
+    [SerializeField] GameObject landScape;
+
+    public bool isPlayersNamed = false;
 
     [SerializeField] GameObject EscMenuObj;
     bool escMenu = false;
@@ -109,6 +111,8 @@ public class Contoller : MonoBehaviour
             players[i].GetComponent<PlayerScript>().playerNumber = i;
 
             players[i].GetComponent<Transform>().position = spawnPointPos;
+
+            players[i].GetComponent<Transform>().SetParent(landScape.transform);
         }
 
         SelectPositionsOnWayPoint(0);
@@ -346,7 +350,7 @@ public class Contoller : MonoBehaviour
 
     public void ShowStat()
     {
-        tintInfo.SetActive(!tintInfo.activeSelf);
+        hintInfo.SetActive(!hintInfo.activeSelf);
         tableStat.GetComponent<TableScript>().RefreshTable(ref players);
         tableStat.SetActive(!tableStat.activeSelf);
     }
@@ -363,6 +367,6 @@ public class Contoller : MonoBehaviour
 
     void ShowHideTint()
     {
-        screenTint.SetActive(!screenTint.activeSelf);
+        screenHint.SetActive(!screenHint.activeSelf);
     }
 }

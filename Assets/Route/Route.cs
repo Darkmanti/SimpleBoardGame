@@ -188,7 +188,7 @@ public class Route : MonoBehaviour
 
                     case WayPointBonus.OneTurn:
                         {
-                            pointData.pointInfo = "+TURN";
+                            pointData.pointInfo = "+";
                             break;
                         }
                 }

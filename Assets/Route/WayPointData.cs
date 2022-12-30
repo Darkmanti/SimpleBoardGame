@@ -50,7 +50,7 @@ public class WayPointData : MonoBehaviour
             else if (bonusType == WayPointBonus.OneTurn)
             {
                 TMPComponent.color = new Vector4(0.0f, 0.5f, 0.0f, 1.0f);
-                TMPComponent.SetText("+turn");
+                TMPComponent.SetText("+");
             }
         }
         else if (pointType == WayPointEnumerator.Start)
