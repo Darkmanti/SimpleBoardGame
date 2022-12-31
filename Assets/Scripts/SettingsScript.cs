@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -12,6 +13,8 @@ public class SettingsScript : MonoBehaviour
 
     [SerializeField] TMP_Dropdown selectPlayersComponent;
     [SerializeField] TMP_Dropdown resolutionComponent;
+
+    [SerializeField] AudioSource clickSound;
 
     bool fullscreen;
 
@@ -62,6 +65,8 @@ public class SettingsScript : MonoBehaviour
 
         resolutionComponent.SetValueWithoutNotify(currentResId);
         resolutionComponent.RefreshShownValue();
+
+        clickSound.gameObject.SetActive(true);
     }
 
     public void ChangeNumberOfPlayers()
@@ -85,5 +90,10 @@ public class SettingsScript : MonoBehaviour
     public void ExitPressed()
     {
         Application.Quit();
+    }
+
+    public void PlayClickSound()
+    {
+        clickSound.Play();
     }
 }

@@ -41,6 +41,9 @@ public class Contoller : MonoBehaviour
 
     [SerializeField] GameObject landScape;
 
+    [SerializeField] AudioSource audioSource;
+    private SFXScript audioSFX;
+
     public bool isPlayersNamed = false;
 
     [SerializeField] GameObject EscMenuObj;
@@ -60,6 +63,8 @@ public class Contoller : MonoBehaviour
         players = new GameObject[numberOfPlayers];
         // TODO: disable unusable name of players
         PlayersNamedObj.SetActive(true);
+
+        audioSFX = audioSource.GetComponent<SFXScript>();
     }
 
     // Update is called once per frame
@@ -122,6 +127,7 @@ public class Contoller : MonoBehaviour
         isPlayersNamed = true;
         currentPlayer = 0;
         playerTurnText.SetText($"Player {players[currentPlayer].GetComponent<PlayerScript>().playerName} turn");
+        players[currentPlayer].GetComponent<PlayerScript>().particle.gameObject.SetActive(true);
     }
 
     void SelectPositionsOnWayPoint(int wayPointNumber)
@@ -179,6 +185,7 @@ public class Contoller : MonoBehaviour
     IEnumerator MakeSteps(int steps)
     {
         players[currentPlayer].GetComponent<PlayerScript>().isMooving = true;
+        players[currentPlayer].GetComponent<PlayerScript>().particle.gameObject.SetActive(false);
 
         while (steps != 0)
         {
@@ -199,6 +206,7 @@ public class Contoller : MonoBehaviour
             target.y += 0.3f;
 
             yield return StartCoroutine(MoveToTarget(players[currentPlayer].transform, target));
+            audioSFX.PlayOneOfStepSound();
 
             //steps--;
             steps = steps > 0 ? (steps - 1) : (steps + 1);
@@ -314,6 +322,7 @@ public class Contoller : MonoBehaviour
 
         playerTurnText.SetText($"Player {players[currentPlayer].GetComponent<PlayerScript>().playerName} turn");
         diceRolledText.SetText("Dice Rolled: ...");
+        players[currentPlayer].GetComponent<PlayerScript>().particle.gameObject.SetActive(true);
     }
 
 
