@@ -8,11 +8,7 @@ using static UnityEngine.GraphicsBuffer;
 public class CameraController : MonoBehaviour
 {
     [SerializeField] float speed = 1.0f;
-    [SerializeField] float rotationSpeed = 1.0f;
     [SerializeField] float shift = 1.0f;
-
-    float lookUpMax = 70.0f;
-    float lookUpMin = 15.0f;
 
     [SerializeField] Vector3 plusLimit = new Vector3(100.0f, 100.0f, 100.0f);
     [SerializeField] Vector3 minusLimit = new Vector3(100.0f, 100.0f, 100.0f);
@@ -33,8 +29,6 @@ public class CameraController : MonoBehaviour
     {
         fov = cam.fieldOfView;
         defaultFov = fov;
-
-        //LookAtCamera();
     }
 
     void Update()
@@ -83,6 +77,7 @@ public class CameraController : MonoBehaviour
         return vec;
     }
 
+    // Checking for across bounding box border
     Vector3 CheckLimits(Transform pos, Vector3 moveDir)
     {
         Vector3 newPos = pos.position + moveDir;
@@ -144,13 +139,6 @@ public class CameraController : MonoBehaviour
         }
     }
 
-    void LookAtCamera()
-    {
-        distanceToTarget = Vector3.Distance(pivot.position, cam.transform.position);
-        cam.transform.position = pivot.position;
-        cam.transform.Translate(new Vector3(0, 0, -distanceToTarget));
-    }
-
     void FOVCamera()
     {
         float wheelMove = Input.GetAxis("Mouse ScrollWheel");
@@ -188,7 +176,6 @@ public class CameraController : MonoBehaviour
         }
 
         transform.position = CheckLimits(pos, moveDir);
-        //transform.position += moveDir;
     }
 
 }

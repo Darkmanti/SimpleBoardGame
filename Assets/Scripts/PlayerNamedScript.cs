@@ -20,7 +20,6 @@ public class PlayerNamedScript : MonoBehaviour
 
     [SerializeField] Contoller contoller;
 
-    // Start is called before the first frame update
     void Start()
     {
         CreateTable();

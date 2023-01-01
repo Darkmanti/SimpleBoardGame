@@ -10,6 +10,7 @@ using UnityEngine.UI;
 public class SettingsScript : MonoBehaviour
 {
     [SerializeField] Toggle fullscreenObject;
+    [SerializeField] Toggle vsyncObject;
 
     [SerializeField] TMP_Dropdown selectPlayersComponent;
     [SerializeField] TMP_Dropdown resolutionComponent;
@@ -43,7 +44,7 @@ public class SettingsScript : MonoBehaviour
 
         resolutions = Screen.resolutions;
 
-        // Print and add the resolutions
+        // Add the resolutions
         foreach (var res in resolutions)
         {
             if((res.width == currentRes.width) && (res.height == currentRes.height) && (res.refreshRate == currentRes.refreshRate))
@@ -60,8 +61,11 @@ public class SettingsScript : MonoBehaviour
         resolutionComponent.ClearOptions();
         resolutionComponent.AddOptions(availableResolutions);
 
-        Toggle toggle = fullscreenObject.GetComponent<Toggle>();
-        toggle.isOn = Screen.fullScreen;
+        Toggle fullscreenToggle = fullscreenObject.GetComponent<Toggle>();
+        fullscreenToggle.isOn = Screen.fullScreen;
+
+        vsyncObject.GetComponent<Toggle>().isOn = true;
+        QualitySettings.vSyncCount = 1;
 
         resolutionComponent.SetValueWithoutNotify(currentResId);
         resolutionComponent.RefreshShownValue();
@@ -81,11 +85,6 @@ public class SettingsScript : MonoBehaviour
         SceneManager.LoadScene("FirstMap");
     }
 
-    public void PlaySecondScene()
-    {
-        //SceneManager.LoadScene("SecondMap");
-    }
-
 
     public void ExitPressed()
     {
@@ -95,5 +94,20 @@ public class SettingsScript : MonoBehaviour
     public void PlayClickSound()
     {
         clickSound.Play();
+    }
+
+    public void ToggleVSync()
+    {
+        Toggle toggle = vsyncObject.GetComponent<Toggle>();
+        bool flag = toggle.isOn;
+
+        if(flag)
+        {
+            QualitySettings.vSyncCount = 1;
+        }
+        else
+        {
+            QualitySettings.vSyncCount = 0;
+        }
     }
 }

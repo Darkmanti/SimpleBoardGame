@@ -56,39 +56,40 @@ public class Contoller : MonoBehaviour
     }
 
 
-    // Start is called before the first frame update
     void Start()
     {
         numberOfPlayers = GameState.numberOfPlayers;
         players = new GameObject[numberOfPlayers];
-        // TODO: disable unusable name of players
+
         PlayersNamedObj.SetActive(true);
 
         audioSFX = audioSource.GetComponent<SFXScript>();
     }
 
-    // Update is called once per frame
     void Update()
     {
         if(isPlayersNamed)
         {
-            // getting rolled dice
+            // Rolling dice and start moovement
             if (Input.GetKeyDown(KeyCode.Space) && !(players[currentPlayer].GetComponent<PlayerScript>().isMooving) && (!gameEnd))
             {
                 steps = ThrowDice();
                 StartCoroutine(MakeSteps(steps));
             }
 
+            // Esc menu
             if (Input.GetKeyDown(KeyCode.Escape))
             {
                 SwitchEscMenu();
             }
 
+            // Stat table
             if(Input.GetKeyDown(KeyCode.Tab))
             {
                 ShowStat();
             }
 
+            // Hint
             if(Input.GetKeyDown(KeyCode.F1))
             {
                 ShowHideTint();
@@ -103,6 +104,7 @@ public class Contoller : MonoBehaviour
 
     public void SpawnPlayers(List<PlayerNamedEntry> playersInputField)
     {
+
         Vector3 spawnPointPos = route.wayPointsSorted[0].GetComponent<Transform>().position;
 
         for (int i = 0; i < numberOfPlayers; i++)
@@ -129,6 +131,7 @@ public class Contoller : MonoBehaviour
         playerTurnText.SetText($"Player {players[currentPlayer].GetComponent<PlayerScript>().playerName} turn");
         players[currentPlayer].GetComponent<PlayerScript>().particle.gameObject.SetActive(true);
     }
+
 
     void SelectPositionsOnWayPoint(int wayPointNumber)
     {
@@ -161,10 +164,9 @@ public class Contoller : MonoBehaviour
                 Vector3 pos;
                 pos.x = center.x + radius * Mathf.Sin(anglePos * Mathf.Deg2Rad);
                 pos.z = center.z + radius * Mathf.Cos(anglePos * Mathf.Deg2Rad);
-                // TODO: calculate high dynamically
+                // TODO: calculate height dynamically
                 pos.y = center.y + 0.3f;
 
-                //players[i].GetComponent<Transform>().position = pos;
                 StartCoroutine(MoveToTarget(players[i].transform, pos));
 
                 anglePos += angle;
@@ -202,7 +204,7 @@ public class Contoller : MonoBehaviour
 
             Vector3 target = route.wayPointsSorted[pointPos].transform.position;
 
-            // TODO: calculate high dynamically
+            // TODO: calculate height dynamically
             target.y += 0.3f;
 
             yield return StartCoroutine(MoveToTarget(players[currentPlayer].transform, target));
@@ -224,6 +226,7 @@ public class Contoller : MonoBehaviour
 
         SelectPositionsOnWayPoint(players[currentPlayer].GetComponent<PlayerScript>().pointPosition);
 
+        // Process result of this turn
         TurnResult();
     }
 
@@ -302,9 +305,11 @@ public class Contoller : MonoBehaviour
                     currentPlayer = 0;
                 }
 
+                // If one of the player ending the game
                 if (players[currentPlayer].GetComponent<PlayerScript>().isEnd)
                 {
                     iter++;
+                    // If all of the players ended the game
                     if (iter >= numberOfPlayers)
                     {
                         gameEnd = true;
@@ -319,13 +324,14 @@ public class Contoller : MonoBehaviour
             } while (true);
         }
         
-
+        // Set new info about next turn player
         playerTurnText.SetText($"Player {players[currentPlayer].GetComponent<PlayerScript>().playerName} turn");
         diceRolledText.SetText("Dice Rolled: ...");
         players[currentPlayer].GetComponent<PlayerScript>().particle.gameObject.SetActive(true);
     }
 
 
+    // Statistics table update 
     public void RefreshStat()
     {
         List<KeyValuePlace> places = new List<KeyValuePlace>();
@@ -357,6 +363,7 @@ public class Contoller : MonoBehaviour
         SceneManager.LoadScene("MainMenu");
     }
 
+    // Statistics table show
     public void ShowStat()
     {
         hintInfo.SetActive(!hintInfo.activeSelf);
@@ -364,6 +371,7 @@ public class Contoller : MonoBehaviour
         tableStat.SetActive(!tableStat.activeSelf);
     }
 
+    // If player reached end point
     bool CheckForEnd(int pointPos)
     {
         if (route.wayPointsSorted[pointPos].GetComponent<WayPointData>().pointType == WayPointData.WayPointEnumerator.End)

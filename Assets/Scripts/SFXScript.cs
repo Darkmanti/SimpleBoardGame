@@ -8,17 +8,11 @@ public class SFXScript : MonoBehaviour
 
     private AudioSource source;
 
-    // Start is called before the first frame update
     void Start()
     {
         source = this.GetComponentInParent<AudioSource>();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 
     public void PlayOneOfStepSound()
     {

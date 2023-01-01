@@ -39,13 +39,13 @@ public class Route : MonoBehaviour
 
         WayPointsSetInfo();
 
-        // set debug lines
+        // Set route line renderer
         lineRenderer = this.GetComponent<LineRenderer>();
     }
 
     void Update()
     {
-        DrawDebugLines();
+        DrawRouteLines();
     }
 
 
@@ -134,7 +134,7 @@ public class Route : MonoBehaviour
         wayPointsSorted.Add(endPoint);
     }
 
-    void DrawDebugLines()
+    void DrawRouteLines()
     {
         int count = wayPointsSorted.Count;
 
