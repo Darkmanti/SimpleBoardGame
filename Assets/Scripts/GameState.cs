@@ -4,7 +4,7 @@ using UnityEngine;
 
 public static class GameState
 {
-    public static int numberOfPlayers = 4;
+    public static int numberOfPlayers = 1;
 
     public static void SetNumberOfPlayers(int number)
     {
